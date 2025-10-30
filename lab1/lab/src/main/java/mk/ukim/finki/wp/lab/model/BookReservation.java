@@ -1,0 +1,13 @@
+package mk.ukim.finki.wp.lab.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@AllArgsConstructor
+@Data
+public class BookReservation {
+    String bookTitle;
+    String readerName;
+    String readerAddress;
+    Long numberOfCopies;
+}
