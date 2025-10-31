@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import mk.ukim.finki.wp.lab.model.Book;
-import mk.ukim.finki.wp.lab.model.BookReservation;
 import mk.ukim.finki.wp.lab.service.BookService;
 import org.thymeleaf.context.WebContext;
 import org.thymeleaf.spring6.SpringTemplateEngine;
@@ -27,6 +26,8 @@ public class BookListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Book> books = bookService.listAll();
+        Book mostPopularBook = bookService.findMostPopularBook();
+        long mostPopularBookCopies = mostPopularBook != null ? bookService.getReservationCountForBook(mostPopularBook.getTitle()) : 0;
 
         IWebExchange exchange = JakartaServletWebApplication
                 .buildApplication(getServletContext())
@@ -34,6 +35,8 @@ public class BookListServlet extends HttpServlet {
 
         WebContext context = new WebContext(exchange);
         context.setVariable("books", books);
+        context.setVariable("mostPopularBook", mostPopularBook);
+        context.setVariable("mostPopularBookCopies", mostPopularBookCopies);
 
         springTemplateEngine.process("listBooks.html", context, resp.getWriter());
     }
@@ -44,12 +47,17 @@ public class BookListServlet extends HttpServlet {
         Double rating = Double.valueOf(req.getParameter("rating"));
 
         List<Book> books = bookService.searchBooks(title, rating);
+        Book mostPopularBook = bookService.findMostPopularBook();
+        long mostPopularBookCopies = mostPopularBook != null ? bookService.getReservationCountForBook(mostPopularBook.getTitle()) : 0;
+        
         IWebExchange exchange = JakartaServletWebApplication
                 .buildApplication(getServletContext())
                 .buildExchange(req, resp);
 
         WebContext context = new WebContext(exchange);
         context.setVariable("books", books);
+        context.setVariable("mostPopularBook", mostPopularBook);
+        context.setVariable("mostPopularBookCopies", mostPopularBookCopies);
 
         springTemplateEngine.process("listBooks.html", context, resp.getWriter());
     }

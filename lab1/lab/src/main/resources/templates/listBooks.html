@@ -31,6 +31,10 @@
     <h1>Welcome to our Book Reservation App</h1>
 </header>
 <main>
+    <div th:if="${mostPopularBook != null}">
+        <h2>Most Popular Book:</h2>
+        <p>Title: <span th:text="${mostPopularBook.getTitle()}"></span>, Genre: <span th:text="${mostPopularBook.getGenre()}"></span>, Rating: <span th:text="${mostPopularBook.getAverageRating()}"></span>, Reservations: <span th:text="${mostPopularBookCopies}"></span> copies</p>
+    </div>
     <form action="/searchBooks" method="POST">
         <h2>Search by title and rating</h2>
 

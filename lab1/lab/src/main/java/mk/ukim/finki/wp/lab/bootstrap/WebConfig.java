@@ -21,7 +21,7 @@ public class WebConfig {
         BookListServlet servlet = new BookListServlet(bookService, springTemplateEngine);
         ServletRegistrationBean<BookListServlet> registrationBean =
                 new ServletRegistrationBean<>(servlet);
-        registrationBean.addUrlMappings("/", "");
+        registrationBean.addUrlMappings("/", "", "/searchBooks");
         registrationBean.setLoadOnStartup(1);
         return registrationBean;
     }
