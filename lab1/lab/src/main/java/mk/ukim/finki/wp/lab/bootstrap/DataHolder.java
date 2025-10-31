@@ -16,7 +16,7 @@ public class DataHolder {
     public void init (){
         books.add(new Book("kniga1", "zanr1", 2));
         books.add(new Book("kniga2", "zanr2", 3));
-        books.add(new Book("kniga3", "zanr3", 5));
+        books.add(new Book("kniga3", "zanr3", 6));
         books.add(new Book("kniga4", "zanr1", 2));
         books.add(new Book("kniga5", "zanr3", 5));
         books.add(new Book("kniga6", "zanr1", 4));
