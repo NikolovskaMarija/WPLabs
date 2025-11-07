@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Book Form</title>
+    <style>
+        body { max-width: 900px; margin: 24px auto; font-family: Arial, sans-serif; line-height: 1.5; }
+        h1 { margin: 16px 0 8px; }
+        form { display: grid; gap: 12px; margin-top: 12px; }
+        label { display: block; margin-bottom: 4px; }
+        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font: inherit; }
+        .actions { display: flex; gap: 8px; align-items: center; }
+        button, .btn { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; background: transparent; font: inherit; cursor: pointer; text-decoration: none; color: inherit; }
+    </style>
+    
+</head>
+<body>
+<h1 th:text="${book} != null ? 'Edit Book' : 'Add Book'"></h1>
+<form id="bookForm" method="post" th:action="@{${book != null} ? '/books/edit/' + ${book.id} : '/books/add'}">
+    <label>Title</label>
+    <input type="text" name="title" th:value="${book != null} ? ${book.title} : ''" required />
+
+    <label>Genre</label>
+    <input type="text" name="genre" th:value="${book != null} ? ${book.genre} : ''" required />
+
+    <label>Average Rating</label>
+    <input type="number" name="averageRating" min="1" max="10" step="0.1" th:value="${book != null} ? ${book.averageRating} : ''" required />
+
+    <label>Author</label>
+    <select name="authorId" required>
+        <option value="" disabled th:selected="${book == null}">Select author</option>
+        <option th:each="author : ${authors}"
+                th:value="${author.id}"
+                th:selected="${book != null} ? ${book.author.id} == ${author.id} : false"
+                th:text="${author.name + ' ' + author.surname}"></option>
+    </select>
+
+    <div class="actions">
+        <button type="submit">Save</button>
+        <a class="btn" href="/books">Cancel</a>
+    </div>
+    
+</form>
+</body>
+</html>

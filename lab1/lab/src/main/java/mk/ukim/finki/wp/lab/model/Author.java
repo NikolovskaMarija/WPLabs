@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Book {
+public class Author {
     private Long id;
-    private String title;
-    private String genre;
-    private double averageRating;
-    private Author author;
+    private String name;
+    private String surname;
+    private String country;
+    private String biography;
 }

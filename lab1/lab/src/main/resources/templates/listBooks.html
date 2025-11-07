@@ -4,38 +4,51 @@
     <meta charset="utf-8">
     <title>Book Reservation - Welcome and choose a Book</title>
     <style type="text/css">
-        body {
-            width: 800px;
-            margin: auto;
-            font-family: Arial, sans-serif;
-        }
-        h1 {
-            color: #333;
-        }
-        form {
-            margin-top: 20px;
-        }
-        .book-option {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-        .book-option:hover {
-            background-color: #f5f5f5;
-        }
+        body { max-width: 900px; margin: 24px auto; font-family: Arial, sans-serif; line-height: 1.5; }
+        h1, h2 { margin: 16px 0 8px; }
+        .container { padding: 8px 0; }
+        .stack { display: grid; gap: 12px; }
+        .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .book-option { display: flex; align-items: center; gap: 12px; border: 1px solid #ddd; border-radius: 4px; padding: 10px; }
+        .muted { font-size: 14px; }
+        form { display: grid; gap: 12px; margin-top: 12px; }
+        label { display: inline-block; margin-right: 6px; }
+        input[type="text"], input[type="number"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font: inherit; }
+        button, .btn { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; background: transparent; font: inherit; cursor: pointer; text-decoration: none; color: inherit; }
+        .actions { display: flex; gap: 8px; align-items: center; }
+        .section { padding: 8px 0; }
     </style>
 </head>
 <body>
 <header>
     <h1>Welcome to our Book Reservation App</h1>
 </header>
-<main>
-    <div th:if="${mostPopularBook != null}">
-        <h2>Most Popular Book:</h2>
-        <p>Title: <span th:text="${mostPopularBook.getTitle()}"></span>, Genre: <span th:text="${mostPopularBook.getGenre()}"></span>, Rating: <span th:text="${mostPopularBook.getAverageRating()}"></span>, Reservations: <span th:text="${mostPopularBookCopies}"></span> copies</p>
+<main class="container stack">
+    <div class="row">
+        <a class="btn" href="/books/book-form">Add New Book</a>
     </div>
-    <form action="/searchBooks" method="POST">
+    <section class="section stack">
+        <h2>Books</h2>
+        <div th:each="book : ${books}" class="book-option">
+            <span>
+                Title: <span th:text="${book.getTitle()}"></span>
+                | Genre: <span th:text="${book.getGenre()}"></span>
+                | Rating: <span th:text="${book.getAverageRating()}"></span>
+                | Author: <span th:text="${book.getAuthor().getName() + ' ' + book.getAuthor().getSurname()}"></span>
+            </span>
+            <span class="actions">
+                <a class="btn" th:href="@{'/books/book-form/' + ${book.getId()}}">Edit</a>
+                <form th:action="@{'/books/delete/' + ${book.getId()}}" method="post">
+                    <button class="btn" type="submit">Delete</button>
+                </form>
+            </span>
+        </div>
+    </section>
+    <div class="section" th:if="${mostPopularBook != null}">
+        <h2>Most Popular Book:</h2>
+        <p class="muted">Title: <span th:text="${mostPopularBook.getTitle()}"></span>, Genre: <span th:text="${mostPopularBook.getGenre()}"></span>, Rating: <span th:text="${mostPopularBook.getAverageRating()}"></span>, Reservations: <span th:text="${mostPopularBookCopies}"></span> copies</p>
+    </div>
+    <form action="/books" method="POST">
         <h2>Search by title and rating</h2>
 
         <label>Title</label>
@@ -44,22 +57,17 @@
         <h2>Rating</h2>
         <input type="number" name="rating" min="1" max="10" required><br/>
         <br/>
-        <input type="submit" value="Search">
+        <button class="btn" type="submit">Search</button>
     </form>
     <form action="/bookReservation" method="POST">
         <h2>Choose a book:</h2>
-        <!-- Display radio buttons for each book,
-             the value should be the book title
-             and the displayed text should be:
-             Title: <book_title>, Genre: <book_genre>, Rating: <average_rating> -->
-
-        <div th:each="book : ${books}">
-            <input type="radio" name="bookTitle" th:value="${book.getTitle()}"
-            th:id="${book.getTitle()}" required>
-            <label th:for="${book.getTitle()}">
+        <div th:each="book : ${books}" class="book-option">
+            <input type="radio" name="bookTitle" th:value="${book.getTitle()}" th:id="${'book-' + book.getId()}" required>
+            <label th:for="${'book-' + book.getId()}">
                 Title: <span th:text="${book.getTitle()}"></span>
                 Genre: <span th:text="${book.getGenre()}"></span>
                 Rating: <span th:text="${book.getAverageRating()}"></span>
+                Author: <span th:text="${book.getAuthor().getName() + ' ' + book.getAuthor().getSurname()}"></span>
             </label>
         </div>
         <h2>Enter your information:</h2>
@@ -71,7 +79,7 @@
         <h2>Choose number of copies:</h2>
         <input type="number" name="numCopies" min="1" max="10" required><br/>
         <br/>
-        <input type="submit" value="Reserve Book">
+        <button class="btn" type="submit">Reserve Book</button>
     </form>
 </main>
 </body>

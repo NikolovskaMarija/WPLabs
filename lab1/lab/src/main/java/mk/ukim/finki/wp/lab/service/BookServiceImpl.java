@@ -2,22 +2,27 @@ package mk.ukim.finki.wp.lab.service;
 
 import mk.ukim.finki.wp.lab.model.Book;
 import mk.ukim.finki.wp.lab.model.BookReservation;
+import mk.ukim.finki.wp.lab.model.Author;
 import mk.ukim.finki.wp.lab.repository.BookRepository;
 import mk.ukim.finki.wp.lab.repository.BookReservationRepository;
+import mk.ukim.finki.wp.lab.repository.AuthorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookReservationRepository bookReservationRepository;
+    private final AuthorRepository authorRepository;
 
-    public BookServiceImpl(BookRepository bookRepository, BookReservationRepository bookReservationRepository) {
+    public BookServiceImpl(BookRepository bookRepository, BookReservationRepository bookReservationRepository, AuthorRepository authorRepository) {
         this.bookRepository = bookRepository;
         this.bookReservationRepository = bookReservationRepository;
+        this.authorRepository = authorRepository;
     }
 
     @Override
@@ -68,5 +73,31 @@ public class BookServiceImpl implements BookService {
         }
         
         return totalCount;
+    }
+
+    @Override
+    public Optional<Book> findById(Long id) {
+        return bookRepository.findById(id);
+    }
+
+    @Override
+    public Book create(String title, String genre, Double averageRating, Long authorId) {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new IllegalArgumentException("Author not found"));
+        Book book = new Book(null, title, genre, averageRating, author);
+        return bookRepository.save(book);
+    }
+
+    @Override
+    public Book update(Long id, String title, String genre, Double averageRating, Long authorId) {
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new IllegalArgumentException("Author not found"));
+        Book updated = new Book(id, title, genre, averageRating, author);
+        return bookRepository.update(id, updated);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        bookRepository.deleteById(id);
     }
 }

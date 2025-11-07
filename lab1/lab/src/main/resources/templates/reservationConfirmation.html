@@ -4,33 +4,13 @@
     <meta charset="utf-8">
     <title>Book Reservation - Confirmation</title>
     <style type="text/css">
-        body {
-            width: 800px;
-            margin: auto;
-            font-family: Arial, sans-serif;
-        }
-        h1 {
-            color: #333;
-        }
-        table {
-            width: 100%;
-            margin-top: 20px;
-            border-collapse: collapse;
-        }
-        table, td, th {
-            border: 1px solid #333;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px;
-        }
-        td {
-            padding: 10px;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
+        body { max-width: 900px; margin: 24px auto; font-family: Arial, sans-serif; line-height: 1.5; }
+        h1 { margin: 16px 0 8px; }
+        table { width: 100%; margin-top: 12px; border-collapse: collapse; }
+        table, td, th { border: 1px solid #ccc; }
+        th, td { padding: 10px; text-align: left; }
+        .row { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+        .btn { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; background: transparent; font: inherit; cursor: pointer; text-decoration: none; color: inherit; }
     </style>
 </head>
 <body>
@@ -44,7 +24,7 @@
         </tr>
         <tr>
             <td><b>Reader Name</b></td>
-            <td th:text="${reservation.getReaderAddress}"><!-- Display reader name from servlet --></td>
+            <td th:text="${reservation.getReaderName()}"><!-- Display reader name --></td>
         </tr>
         <tr>
             <td><b>Client IP Address</b></td>
@@ -56,10 +36,12 @@
         </tr>
         <tr>
             <td><b>Number of copies</b></td>
-            <td th:text="${reservation.numberOfCopies}"><!-- Display number of copies from servlet --></td>
+            <td th:text="${reservation.getNumberOfCopies()}"><!-- Display number of copies --></td>
         </tr>
     </table>
-    <a href="http://localhost:8080">Back to home</a>
+    <div class="row">
+        <a class="btn" href="/">Back to home</a>
+    </div>
 </section>
 </body>
 </html>
