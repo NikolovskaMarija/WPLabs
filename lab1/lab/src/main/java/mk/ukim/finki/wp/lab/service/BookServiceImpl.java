@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -27,17 +28,23 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> listAll() {
-        return bookRepository.findAll();
+        return bookRepository.findAll().stream()
+                .filter(book -> book.getAuthor() != null)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<Book> searchBooks(String text, Double rating) {
-        return bookRepository.searchBooks(text, rating);
+        return bookRepository.searchBooks(text, rating).stream()
+                .filter(book -> book.getAuthor() != null)
+                .collect(Collectors.toList());
     }
 
     @Override
     public Book findMostPopularBook() {
-        List<Book> books = bookRepository.findAll();
+        List<Book> books = bookRepository.findAll().stream()
+                .filter(book -> book.getAuthor() != null)
+                .collect(Collectors.toList());
         List<BookReservation> reservations = bookReservationRepository.findAll();
         Map<String, Long> bookReservationCounts = new HashMap<>();
         
@@ -99,5 +106,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
+    }
+
+    @Override
+    public void nullifyAuthorForBooks(Long authorId) {
+        bookRepository.nullifyAuthorForBooks(authorId);
     }
 }

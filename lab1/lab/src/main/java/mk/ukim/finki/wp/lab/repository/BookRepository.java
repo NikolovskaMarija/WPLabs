@@ -12,4 +12,5 @@ public interface BookRepository {
     Book save(Book book);
     Book update(Long id, Book book);
     void deleteById(Long id);
+    void nullifyAuthorForBooks(Long authorId);
 }

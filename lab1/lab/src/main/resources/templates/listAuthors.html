@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Authors List</title>
+    <style type="text/css">
+        body { max-width: 900px; margin: 24px auto; font-family: Arial, sans-serif; line-height: 1.5; }
+        h1, h2 { margin: 16px 0 8px; }
+        .container { padding: 8px 0; }
+        .stack { display: grid; gap: 12px; }
+        .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+        .author-option { display: flex; align-items: center; gap: 12px; border: 1px solid #ddd; border-radius: 4px; padding: 10px; }
+        .muted { font-size: 14px; }
+        form { display: grid; gap: 12px; margin-top: 12px; }
+        label { display: inline-block; margin-right: 6px; }
+        input[type="text"], input[type="number"], select { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font: inherit; }
+        button, .btn { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; background: transparent; font: inherit; cursor: pointer; text-decoration: none; color: inherit; }
+        .actions { display: flex; gap: 8px; align-items: center; }
+        .section { padding: 8px 0; }
+        .error { color: red; padding: 8px; background-color: #ffebee; border: 1px solid #f44336; border-radius: 4px; margin: 8px 0; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Authors Management</h1>
+</header>
+<main class="container stack">
+    <div class="row">
+        <a class="btn" href="/authors/author-form">Add New Author</a>
+        <a class="btn" href="/books">Back to Books</a>
+    </div>
+    <div th:if="${error}" class="error">
+        <span th:text="${error}"></span>
+    </div>
+    <section class="section stack">
+        <h2>Authors</h2>
+        <div th:each="author : ${authors}" class="author-option">
+            <div style="flex: 1;">
+                <strong><span th:text="${author.getName() + ' ' + author.getSurname()}"></span></strong>
+                <div class="muted">
+                    <div>Country: <span th:text="${author.getCountry()}"></span></div>
+                    <div>Biography: <span th:text="${author.getBiography()}"></span></div>
+                </div>
+            </div>
+            <span class="actions">
+                <a class="btn" th:href="@{'/authors/author-form/' + ${author.getId()}}">Edit</a>
+                <form th:action="@{'/authors/delete/' + ${author.getId()}}" method="post" style="display: inline;">
+                    <button class="btn" type="submit">Delete</button>
+                </form>
+            </span>
+        </div>
+    </section>
+</main>
+</body>
+</html>
+

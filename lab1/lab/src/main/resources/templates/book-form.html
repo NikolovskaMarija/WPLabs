@@ -28,10 +28,10 @@
 
     <label>Author</label>
     <select name="authorId" required>
-        <option value="" disabled th:selected="${book == null}">Select author</option>
+        <option value="" disabled th:selected="${book == null || book.author == null}">Select author</option>
         <option th:each="author : ${authors}"
                 th:value="${author.id}"
-                th:selected="${book != null} ? ${book.author.id} == ${author.id} : false"
+                th:selected="${book != null && book.author != null} ? ${book.author.id} == ${author.id} : false"
                 th:text="${author.name + ' ' + author.surname}"></option>
     </select>
 

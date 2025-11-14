@@ -14,4 +14,5 @@ public interface BookService {
     Book create(String title, String genre, Double averageRating, Long authorId);
     Book update(Long id, String title, String genre, Double averageRating, Long authorId);
     void deleteById(Long id);
+    void nullifyAuthorForBooks(Long authorId);
 }

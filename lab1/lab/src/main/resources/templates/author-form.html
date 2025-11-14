@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Author Form</title>
+    <style>
+        body { max-width: 900px; margin: 24px auto; font-family: Arial, sans-serif; line-height: 1.5; }
+        h1 { margin: 16px 0 8px; }
+        form { display: grid; gap: 12px; margin-top: 12px; }
+        label { display: block; margin-bottom: 4px; }
+        input, textarea { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font: inherit; }
+        textarea { min-height: 100px; resize: vertical; }
+        .actions { display: flex; gap: 8px; align-items: center; }
+        button, .btn { padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; background: transparent; font: inherit; cursor: pointer; text-decoration: none; color: inherit; }
+    </style>
+</head>
+<body>
+<h1 th:text="${author} != null ? 'Edit Author' : 'Add Author'"></h1>
+<form id="authorForm" method="post" th:action="@{${author != null} ? '/authors/edit/' + ${author.id} : '/authors/add'}">
+    <label>Name</label>
+    <input type="text" name="name" th:value="${author != null} ? ${author.name} : ''" required />
+
+    <label>Surname</label>
+    <input type="text" name="surname" th:value="${author != null} ? ${author.surname} : ''" required />
+
+    <label>Country</label>
+    <input type="text" name="country" th:value="${author != null} ? ${author.country} : ''" required />
+
+    <label>Biography</label>
+    <textarea name="biography" required th:text="${author != null} ? ${author.biography} : ''"></textarea>
+
+    <div class="actions">
+        <button type="submit">Save</button>
+        <a class="btn" href="/authors">Cancel</a>
+    </div>
+</form>
+</body>
+</html>
+

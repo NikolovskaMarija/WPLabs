@@ -28,4 +28,23 @@ public class AuthorRepository {
     public Optional<Author> findById(Long id) {
         return authors.stream().filter(a -> a.getId().equals(id)).findFirst();
     }
+
+    public Author save(Author author) {
+        if (author.getId() == null) {
+            author.setId((long)(Math.random() * 100000));
+        }
+        authors.add(author);
+        return author;
+    }
+
+    public Author update(Long id, Author updated) {
+        this.deleteById(id);
+        updated.setId(id);
+        authors.add(updated);
+        return updated;
+    }
+
+    public void deleteById(Long id) {
+        authors.removeIf(a -> a.getId().equals(id));
+    }
 }

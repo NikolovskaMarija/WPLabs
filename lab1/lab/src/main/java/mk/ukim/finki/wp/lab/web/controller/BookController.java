@@ -69,6 +69,7 @@ public class BookController {
     @GetMapping("/books/book-form/{id}")
     public String getEditBookForm(@PathVariable Long id, Model model) {
         return bookService.findById(id)
+                .filter(book -> book.getAuthor() != null)
                 .map(book -> {
                     model.addAttribute("book", book);
                     model.addAttribute("authors", authorService.findAll());

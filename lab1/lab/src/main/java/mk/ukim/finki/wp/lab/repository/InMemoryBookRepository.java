@@ -51,4 +51,13 @@ public class InMemoryBookRepository implements BookRepository {
     public void deleteById(Long id) {
         DataHolder.books.removeIf(b -> b.getId().equals(id));
     }
+
+    @Override
+    public void nullifyAuthorForBooks(Long authorId) {
+        for (Book book : DataHolder.books) {
+            if (book.getAuthor() != null && book.getAuthor().getId().equals(authorId)) {
+                book.setAuthor(null);
+            }
+        }
+    }
 }
