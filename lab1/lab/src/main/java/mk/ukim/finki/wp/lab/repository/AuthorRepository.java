@@ -1,50 +1,11 @@
 package mk.ukim.finki.wp.lab.repository;
 
-import jakarta.annotation.PostConstruct;
 import mk.ukim.finki.wp.lab.model.Author;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Repository
-public class AuthorRepository {
-    private final List<Author> authors = new ArrayList<>();
+public interface AuthorRepository extends JpaRepository<Author, Long> {
 
-    @PostConstruct
-    public void init() {
-        if (authors.isEmpty()) {
-            authors.add(new Author((long) (Math.random() * 1000), "Ivo", "Andric", "Serbia", "Nobel laureate novelist."));
-            authors.add(new Author((long) (Math.random() * 1000), "Ismail", "Kadare", "Albania", "Renowned Albanian novelist."));
-            authors.add(new Author((long) (Math.random() * 1000), "Petre", "M. Andreevski", "North Macedonia", "Prominent Macedonian writer."));
-        }
-    }
-
-    public List<Author> findAll() {
-        return authors;
-    }
-
-    public Optional<Author> findById(Long id) {
-        return authors.stream().filter(a -> a.getId().equals(id)).findFirst();
-    }
-
-    public Author save(Author author) {
-        if (author.getId() == null) {
-            author.setId((long)(Math.random() * 100000));
-        }
-        authors.add(author);
-        return author;
-    }
-
-    public Author update(Long id, Author updated) {
-        this.deleteById(id);
-        updated.setId(id);
-        authors.add(updated);
-        return updated;
-    }
-
-    public void deleteById(Long id) {
-        authors.removeIf(a -> a.getId().equals(id));
-    }
 }

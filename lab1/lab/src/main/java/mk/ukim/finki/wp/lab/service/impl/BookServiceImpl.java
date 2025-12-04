@@ -1,4 +1,4 @@
-package mk.ukim.finki.wp.lab.service;
+package mk.ukim.finki.wp.lab.service.impl;
 
 import mk.ukim.finki.wp.lab.model.Book;
 import mk.ukim.finki.wp.lab.model.BookReservation;
@@ -6,6 +6,7 @@ import mk.ukim.finki.wp.lab.model.Author;
 import mk.ukim.finki.wp.lab.repository.BookRepository;
 import mk.ukim.finki.wp.lab.repository.BookReservationRepository;
 import mk.ukim.finki.wp.lab.repository.AuthorRepository;
+import mk.ukim.finki.wp.lab.service.BookService;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -35,16 +36,12 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public List<Book> searchBooks(String text, Double rating) {
-        return bookRepository.searchBooks(text, rating).stream()
-                .filter(book -> book.getAuthor() != null)
-                .collect(Collectors.toList());
+        return bookRepository.findAllByTitleContainingOrAverageRatingGreaterThan(text, rating);
     }
 
     @Override
     public Book findMostPopularBook() {
-        List<Book> books = bookRepository.findAll().stream()
-                .filter(book -> book.getAuthor() != null)
-                .collect(Collectors.toList());
+        List<Book> books = bookRepository.findAll();
         List<BookReservation> reservations = bookReservationRepository.findAll();
         Map<String, Long> bookReservationCounts = new HashMap<>();
         
@@ -91,7 +88,7 @@ public class BookServiceImpl implements BookService {
     public Book create(String title, String genre, Double averageRating, Long authorId) {
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new IllegalArgumentException("Author not found"));
-        Book book = new Book(null, title, genre, averageRating, author);
+        Book book = new Book(title, genre, averageRating, author);
         return bookRepository.save(book);
     }
 
@@ -99,17 +96,17 @@ public class BookServiceImpl implements BookService {
     public Book update(Long id, String title, String genre, Double averageRating, Long authorId) {
         Author author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new IllegalArgumentException("Author not found"));
-        Book updated = new Book(id, title, genre, averageRating, author);
-        return bookRepository.update(id, updated);
+        Book updated = findById(id).get();
+        updated.setTitle(title);
+        updated.setGenre(genre);
+        updated.setAverageRating(averageRating);
+        updated.setAuthor(author);
+
+        return bookRepository.save(updated);
     }
 
     @Override
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
-    }
-
-    @Override
-    public void nullifyAuthorForBooks(Long authorId) {
-        bookRepository.nullifyAuthorForBooks(authorId);
     }
 }

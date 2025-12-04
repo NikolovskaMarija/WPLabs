@@ -6,6 +6,7 @@ import mk.ukim.finki.wp.lab.service.AuthorService;
 import mk.ukim.finki.wp.lab.service.BookService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,19 +32,23 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public Author create(String name, String surname, String country, String biography) {
-        Author author = new Author(null, name, surname, country, biography);
+        Author author = new Author(null, name, surname, country, biography, new ArrayList<>());
         return authorRepository.save(author);
     }
 
     @Override
     public Author update(Long id, String name, String surname, String country, String biography) {
-        Author updated = new Author(id, name, surname, country, biography);
-        return authorRepository.update(id, updated);
+        Author updated = findById(id).get();
+
+        updated.setName(name);
+        updated.setSurname(surname);
+        updated.setCountry(country);
+        updated.setBiography(biography);
+        return authorRepository.save(updated);
     }
 
     @Override
     public void deleteById(Long id) {
-        bookService.nullifyAuthorForBooks(id);
         authorRepository.deleteById(id);
     }
 }

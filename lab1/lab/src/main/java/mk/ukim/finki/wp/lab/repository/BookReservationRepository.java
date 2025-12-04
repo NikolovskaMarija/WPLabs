@@ -1,10 +1,11 @@
 package mk.ukim.finki.wp.lab.repository;
 
 import mk.ukim.finki.wp.lab.model.BookReservation;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface BookReservationRepository {
-    BookReservation save(BookReservation reservation);
-    List<BookReservation> findAll();
+@Repository
+public interface BookReservationRepository extends JpaRepository<BookReservation, Long> {
 }
