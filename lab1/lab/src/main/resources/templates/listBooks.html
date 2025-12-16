@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <title>Book Reservation - Welcome and choose a Book</title>
@@ -21,12 +22,24 @@
 </head>
 <body>
 <header>
-    <h1>Welcome to our Book Reservation App</h1>
+    <div class="row" style="justify-content: space-between; align-items: center;">
+        <h1>Welcome to our Book Reservation App</h1>
+        <div class="row">
+            <span sec:authorize="isAnonymous()">
+                <a class="btn" href="/login">Login</a>
+            </span>
+            <span sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button class="btn" type="submit">Logout</button>
+                </form>
+            </span>
+        </div>
+    </div>
 </header>
 <main class="container stack">
     <div class="row">
-        <a class="btn" href="/books/book-form">Add New Book</a>
         <a class="btn" href="/authors">Manage Authors</a>
+        <a class="btn" href="/books/book-form" sec:authorize="hasRole('ADMIN')">Add New Book</a>
     </div>
     <section class="section stack">
         <h2>Books</h2>
@@ -37,7 +50,7 @@
                 | Rating: <span th:text="${book.getAverageRating()}"></span>
                 | Author: <span th:text="${book.getAuthor().getName() + ' ' + book.getAuthor().getSurname()}"></span>
             </span>
-            <span class="actions">
+            <span class="actions" sec:authorize="hasRole('ADMIN')">
                 <a class="btn" th:href="@{'/books/book-form/' + ${book.getId()}}">Edit</a>
                 <form th:action="@{'/books/delete/' + ${book.getId()}}" method="post">
                     <button class="btn" type="submit">Delete</button>

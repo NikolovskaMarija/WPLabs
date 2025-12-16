@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8">
     <title>Authors List</title>
@@ -22,12 +23,24 @@
 </head>
 <body>
 <header>
-    <h1>Authors Management</h1>
+    <div class="row" style="justify-content: space-between; align-items: center;">
+        <h1>Authors Management</h1>
+        <div class="row">
+            <span sec:authorize="isAnonymous()">
+                <a class="btn" href="/login">Login</a>
+            </span>
+            <span sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button class="btn" type="submit">Logout</button>
+                </form>
+            </span>
+        </div>
+    </div>
 </header>
 <main class="container stack">
     <div class="row">
-        <a class="btn" href="/authors/author-form">Add New Author</a>
         <a class="btn" href="/books">Back to Books</a>
+        <a class="btn" href="/authors/author-form" sec:authorize="hasRole('ADMIN')">Add New Author</a>
     </div>
     <div th:if="${error}" class="error">
         <span th:text="${error}"></span>
@@ -42,7 +55,7 @@
                     <div>Biography: <span th:text="${author.getBiography()}"></span></div>
                 </div>
             </div>
-            <span class="actions">
+            <span class="actions" sec:authorize="hasRole('ADMIN')">
                 <a class="btn" th:href="@{'/authors/author-form/' + ${author.getId()}}">Edit</a>
                 <form th:action="@{'/authors/delete/' + ${author.getId()}}" method="post" style="display: inline;">
                     <button class="btn" type="submit">Delete</button>
@@ -53,4 +66,5 @@
 </main>
 </body>
 </html>
+
 
